@@ -1,4 +1,11 @@
 html_document:
   self_contained: false
+  lib_dir: site_libs
   mathjax: null
-  lib_dir: libs
+  highlight: null
+  css: custom.css
+  toc: true
+  toc_float:
+    collapsed: false
+    smooth_scroll: true
+
