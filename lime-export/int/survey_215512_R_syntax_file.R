@@ -1,4 +1,4 @@
-data <- read.csv("./lime-export/int/survey_215512_R_data_file.csv", quote = "'\"", na.strings=c("", "\"\""), stringsAsFactors=FALSE)
+data_int <- read.csv("./lime-export/int/survey_215512_R_data_file.csv", quote = "'\"", na.strings=c("", "\"\""), stringsAsFactors=FALSE)
 
 
 # LimeSurvey Field type: F
