@@ -1,0 +1,45 @@
+---
+title: "Zpětná vazba Discover"
+---
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+<i class="fa fa-camera-retro"> `r 12` </i> 
+
+```{r render_courses_load, child="_render_courses.Rmd", include=FALSE}
+```
+
+```{r render_courses_render, include=FALSE}
+for(turnus in c(1,2)) {
+  for(kurz in c("Bioetika","Matika")) {
+    render_course(turnus,kurz)
+    }
+}
+```
+
+```{r}
+library(flexdashboard)
+```
+
+
+```{r}
+gauge(12,1,100)
+```
+
+```{r, results="asis"}
+htmltools::tag("i",varArgs = list("class"="fa fa-camera-retro","Hi"))
+```
+
