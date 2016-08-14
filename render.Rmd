@@ -1,0 +1,15 @@
+---
+title: "render"
+---
+
+```{r load_render_function, child="_render_courses.Rmd", include=FALSE}
+
+```
+
+```{r render_courses_render, include=F}
+for(turnus in c(1,2)) {
+  for(kurz in c("Bioetika","Matika")) {
+    render_course(turnus,kurz)
+    }
+}
+```
