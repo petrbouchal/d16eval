@@ -1,4 +1,5 @@
 name: "my-website"
+exclude: ["lime-export"]
 navbar:
   title: "Discover 2016"
   left:
@@ -7,11 +8,11 @@ navbar:
       menu:
       - text: Júl
       - text: "Bioetika"
-        href: bioetika_1.html
+        href: kurz_bioetika_1.html
       - text: "---------"
       - text: August
       - text: Matika
-        href: matika_2.html
+        href: kurz_matika_2.html
     - text: "Týmové"
       href: tymove.html
     - text: "Dopad"
