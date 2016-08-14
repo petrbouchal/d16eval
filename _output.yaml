@@ -1,0 +1,4 @@
+html_document:
+  self_contained: false
+  mathjax: null
+  lib_dir: libs
