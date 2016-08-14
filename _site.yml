@@ -1,0 +1,25 @@
+name: "my-website"
+navbar:
+  title: "Discover 2016"
+  left:
+    - text: "Kurzy"
+      icon: fa-graduation-cap
+      menu:
+      - text: Júl
+      - text: "Bioetika"
+        href: bioetika_1.html
+      - text: "---------"
+      - text: August
+      - text: Matika
+        href: matika_2.html
+    - text: "Týmové"
+      href: tymove.html
+    - text: "Dopad"
+      href: dopad.html
+    - text: "Volný čas"
+      href: volnycas.html
+    - text: "Demografie"
+      href: demog.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://example.com
