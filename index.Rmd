@@ -20,6 +20,14 @@ opts_knit$set(width=75)
 <i class="fa fa-camera-retro"> `r 12` </i> 
 
 ```{r render_courses_load, child="_render_courses.Rmd", include=FALSE}
+
+source("./lime-export/int/survey_215512_R_syntax_file.R")
+data_int <- data
+rm(data)
+source("./lime-export/jul/survey_957564_R_syntax_file.R")
+data_jul <- data
+rm(data)
+
 ```
 
 ```{r render_courses_render, include=FALSE}
