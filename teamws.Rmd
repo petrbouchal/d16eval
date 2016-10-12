@@ -1,0 +1,69 @@
+---
+title: "R Notebook"
+---
+
+```{r knitr_init, echo=FALSE, cache=FALSE, warning=F}
+library(knitr)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+```{r}
+source("library.R")
+source("loadprocesseddata.R")
+```
+
+# Týmové workshopy
+
+## Zajímavost a užitečnost
+
+```{r Teamws}
+
+likertcz <- c("Určitě ne","Spíše ne","Nevím","Spíše ano","Určitě ano")
+teamws <- ddf %>% select(contains("wsTymove"), session) %>%
+  select(contains("_"), session) %>% 
+  gather(key=workshop, value=value, -session) %>% 
+  separate(workshop, into = c("variable","day")) %>% 
+  group_by(session, day, variable) %>% 
+  mutate(pocet=n()) %>% 
+  group_by(session, day, variable, value) %>% 
+  summarise(share=n()/mean(pocet)) %>%
+  ungroup() %>% 
+  mutate(value = fct_relevel(value, c(likertcz)),
+         day   = fct_relevel(day, rev(c("po","st","pa","so"))),
+         day   = fct_recode(day, c(Pondělí="po",Středa="st",Pátek="pa",Sobota="so")))
+
+```
+
+### Júl
+
+```{r fig.height=3}
+teamws %>% filter(session == "Júl") %>%  arrange(value) %>%
+ggplot(aes(x = day, y = share, fill = value, order = value)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~variable) + coord_flip() +
+  scale_fill_manual(values = brewer.pal(5,"RdYlGn")) +
+  theme_discover_multi
+```
+
+### August
+
+```{r fig.height=3}
+library(RColorBrewer)
+library(ggplot2)
+teamws %>% filter(session == "Aug") %>%  arrange(value) %>%
+ggplot(aes(x = day, y = share, fill = value, order = value)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~variable) + coord_flip() +
+  scale_fill_manual(values = brewer.pal(5,"RdYlGn")) +
+  theme_discover_multi
+```
