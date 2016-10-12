@@ -6,10 +6,18 @@ title: "render"
 
 ```
 
+```{r load data}
+source("loadprocesseddata.r")
+```
+
+
 ```{r render_courses_render, include=F}
-for(turnus in c(1,2)) {
-  for(kurz in c("Bioetika","Matika")) {
-    render_course(turnus,kurz)
-    }
+
+coursegrid <- kurzy %>% group_by(session, kurz) %>% summarise(pocet=n()) %>%
+  filter(!is.na(session), !is.na(kurz)) %>% 
+  select(-pocet)
+
+for(gridrownum in 1:nrow(coursegrid)) {
+  render_course(coursegrid[gridrownum, 1], coursegrid[gridrownum, 2])
 }
 ```
