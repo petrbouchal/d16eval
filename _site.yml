@@ -1,26 +1,113 @@
 name: "my-website"
-exclude: ["lime-export"]
+exclude: ["lime-export","excel-for-inspection","rdata"]
 navbar:
   title: "Discover 2016"
   left:
-    - text: "Kurzy"
+    - text: "Júl"
       icon: fa-graduation-cap
       menu:
-      - text: Júl
       - text: "Bioetika"
-        href: kurz_bioetika_1.html
-      - text: "---------"
-      - text: August
-      - text: Matika
-        href: kurz_matika_2.html
-    - text: "Týmové"
-      href: tymove.html
-    - text: "Dopad"
-      href: dopad.html
-    - text: "Volný čas"
+        href: kurz_bioetika_júl.html
+      - text: "Behaviorální ekonomie"
+        href: kurz_behaviorální ekonomie_júl.html
+      - text: Debata pro začátečníky
+        href: kurz_debata pro začátečníky_júl.html
+      - text: Fyzika
+        href: kurz_fyzika_júl.html
+      - text: Informatika
+        href: kurz_informatika_júl.html
+      - text: Matematika
+        href: kurz_matematika_júl.html
+      - text: Medicína
+        href: kurz_medicína_júl.html
+      - text: Metodologie vědy
+        href: kurz_metodologie vědy_júl.html
+      - text: Politologie
+        href: kurz_politologie_júl.html
+      - text: Robotika
+        href: kurz_robotika_júl.html
+      - text: Psychologie
+        href: kurz_psychologie_júl.html
+      - text: Sociologie
+        href: kurz_sociologie_júl.html
+      - text: Teorie her
+        href: kurz_teorie her_júl.html
+      - text: Výtvarné umění
+        href: kurz_výtvarné umění_júl.html
+    - text: "Aug"
+      icon: fa-graduation-cap
+      menu:
+      - text: Chemie
+        href: kurz_chemie_aug.html
+      - text: Debata pro pokročilé
+        href: kurz_debata pro pokročilé_aug.html
+      - text: Ekonomie
+        href: kurz_ekonomie_aug.html
+      - text: Fyzika
+        href: kurz_fyzika_aug.html
+      - text: Historie
+        href: kurz_historie_aug.html
+      - text: Interdisciplinarita
+        href: kurz_interdisciplinarita_aug.html
+      - text: Literatura
+        href: kurz_literatura_aug.html
+      - text: Medicína
+        href: kurz_medicína_aug.html
+      - text: Medicínská etika
+        href: kurz_medicínská etika_aug.html
+      - text: Metodologie vědy
+        href: kurz_metodologie vědy_aug.html
+      - text: Neurověda
+        href: kurz_neurověda_aug.html
+      - text: Právo
+        href: kurz_právo_aug.html
+      - text: Psychologie
+        href: kurz_psychologie_aug.html
+      - text: Rozvojová studia
+        href: kurz_rozvojová studia_aug.html
+      - text: Sociologie
+        href: kurz_sociologie_aug.html
+      - text: Teorie rozmnožování
+        href: kurz_teorie rozmnožování_aug.html
+      - text: Trestní právo
+        href: kurz_trestní právo_aug.html
+    - text: "Int'l"
+      icon: fa-globe
+      menu:
+        - text: "Courses"
+        - text: "Biology and psychology: sleep and dreams"
+          href: "kurz_fine art: from dots to dragons_int.html"
+        - text: "Development economics: poverty and human development"
+          href: "kurz_development economics: poverty and human development_int.html"
+        - text: "Fine art"
+          href: "kurz_fine art: from dots to dragons_int.html"
+        - text: "Law in practice"
+          href: "kurz_law in practice_int.html"
+        - text: "Literature: in the beginning was the word"
+          href: "kurz_literature: in the beginning was the word_int.html"
+        - text: "Machine Learning"
+          href: "kurz_machine learning_int.html"
+        - text: "Materials Science: from atoms to fusion reactors"
+          href: "kurz_materials science: from atoms to fusion reactors_int.html"
+        - text: "Neuroscience"
+          href: "kurz_neuroscience: the first look on the most important kilogram of fat in your body_int.html"
+        - text: "--------"
+        - text: "International aspects"
+          href: "international.html"
+        - text: "Two-part workshops"
+          href: twopartws.html
+    - text: "Teams &c"
+      icon: fa-heart
+      href: teams.html
+    - text: "Workshops"
+      icon: fa-hand-spock-o
+      href: workshops.html
+    - text: "Leisure &c"
+      icon: fa-rocket
       href: volnycas.html
-    - text: "Demografie"
+    - text: "Impact"
+      icon: fa-bomb
+      href: dopad.html
+    - text: ""
+      icon: fa-area-chart
       href: demog.html
-  right:
-    - icon: fa-github fa-lg
-      href: https://example.com
