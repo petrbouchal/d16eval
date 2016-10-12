@@ -18,7 +18,8 @@ opts_knit$set(width=75)
 
 ```{r render_courses_define}
 render_course <- function(turnus, kurz) {
-  rmarkdown::render("_course.Rmd", params = list(
+  rmarkdown::render(ifelse(turnus=="Int","_course-int.Rmd","_course.Rmd"),
+                    params = list(
     turnus = turnus,
     kurz = kurz
   ),
