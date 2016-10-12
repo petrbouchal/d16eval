@@ -17,102 +17,100 @@ opts_chunk$set(echo=FALSE,
 opts_knit$set(width=75)
 ```
 
-<i class="fa fa-camera-retro"> `r 12` </i> 
-
-# Týmové workshopy
-
-## Srovnání
-
-```{r}
-library(dplyr)
-library(tidyr)
-
-source("./lime-export/int/survey_215512_R_syntax_file.R")
-data_int <- data
-data_int <- data %>% select(-contains("groupTime"), -ends_with("Time"))
-rm(data)
-data_int$session <- "Int"
-source("./lime-export/jul/survey_957564_R_syntax_file.R")
-data_jul <- data
-data_jul <- data %>% select(-contains("groupTime"), -contains("Time.."))
-rm(data)
-data_jul$session <- "Júl"
-# source("./lime-export/jul/survey_XXXXXX_R_syntax_file.R")
-# data_aug <- data
-# rm(data)
-# data_aug <- data %>% select(-contains("groupTime"), -contains("Time.."))
-# data_aug$session <- "Aug"
-
-# data <- bind_rows(data_jul, data_int, data_aug)
-data <- bind_rows(data_jul, data_int)
+```{r Load components}
+source("library.R") # all reused parts and library loads go in there
 ```
 
-## International
-
-```{r Teamws}
-
-library(forcats)
-
-likertcz <- c("Určitě ano","Spíše ano","Nevím","Spíše ne","Určitě ne")
-teamws <- data %>% select(contains("wsTymove"), session) %>%
-  select(contains("_"), session) %>% 
-  gather(key=workshop, value=value, -session) %>% 
-  separate(workshop, into = c("variable","day")) %>% 
-  group_by(session, day, variable) %>% 
-  mutate(pocet=n()) %>% 
-  group_by(session, day, variable, value) %>% 
-  summarise(share=n()/mean(pocet)) %>%
-  ungroup() %>% 
-  mutate(value = fct_relevel(value, c(likertcz)),
-         day   = fct_relevel(day, rev(c("po","st","pa","so"))),
-         day   = fct_recode(day, c(Pondělí="po",Středa="st",Pátek="pa",Sobota="so")))
-
+```{r Load data, echo=F, warning=F}
+source("loaddata.R")
 ```
 
-```{r}
-
-library(ggiraph)
-library(stringr)
-
-teamws2 <- teamws %>% filter(session == "Int") %>% arrange(value) %>%
-  filter(day!="Sobota") %>%
-  mutate(tooltip = paste0(value, " ", format(share*100,digits = 1), "%"),
-         tooltip = str_replace_all(tooltip,"'","&#8217")) %>% 
-  ungroup() %>% mutate(dataid = as.character(row_number()))
-
-tooltip_css <- "font-family:sans-serif; background-color:black; color: white; font-size: 8pt; padding:5px;border-radius:5px 5px 5px 5px;"
-
-wsintplot <- ggplot(teamws2,aes(x = day, y = share, fill = value)) +
-  geom_bar_interactive(stat = "identity", position = "stack",
-                       aes(tooltip=tooltip, data_id=dataid)) +
-  facet_wrap(~variable) + coord_flip()
+```{r Process data for analysis, echo=F}
+source("workshopdata.R")
+source("coursedata.R")
 ```
 
-```{r}
-ggiraph(print(wsintplot), tooltip_extra_css=tooltip_css, hover_css = "opacity: .5;")
-```
+# Course comparison
 
-## Chart
-
-```{r}
-library(RColorBrewer)
+```{r Plot for courses}
 library(ggplot2)
-teamws %>% filter(session == "Júl") %>%  arrange(value) %>%
-ggplot(aes(x = day, y = share, fill = value, order = value)) +
-  geom_bar(stat = "identity", position = "stack") +
-  facet_wrap(~variable) + coord_flip() +
-  scale_fill_manual(values = rev(brewer.pal(5,"RdYlGn")))
-
+library(ggiraph)
+kurzviolinplot <- kurzy %>% group_by(session, kurz) %>%
+  filter(!is.na(hodnoceni)) %>% 
+  summarise(prumer = mean(as.numeric(hodnoceni), na.rm=T),
+            stdev = sd(hodnoceni, na.rm=T),
+            pocet = n()) %>%
+  mutate(dataid = row_number()) %>%
+  arrange(desc(pocet)) %>% 
+  ggplot(aes(session, prumer, alpha=.2)) +
+  geom_violin(fill="grey", colour=NA) +
+  geom_point_interactive(aes(size=pocet, fill=stdev,
+                 tooltip=kurz, data_id=dataid), colour="transparent", shape=21) +
+  scale_fill_continuous(low = "yellow",high = "red") +
+  scale_colour_continuous(low = "yellow",high = "red")  + theme_discover +
+  scale_alpha(guide="none") +
+  guides(size = guide_legend(override.aes = list(fill="red"), title = "počet studentů"),
+         fill = "none") +
+  theme(legend.direction = "horizontal",
+        panel.grid.major.x = element_blank(),
+        legend.box="vertical", legend.spacing = unit(3,"mm"),
+        legend.position = c(0,1),
+        legend.justification = c(0,1.5),
+        legend.key = element_blank(), axis.title = element_blank()) +
+  ggtitle(label = "Hodnocení kurzů Discover 2016",
+          subtitle = "Čím větší tečka, tím víc studentů v kurzu.\n
+Čím červenější, tím víc se hodnocení lišilo mezi studenty.\n
+1 je nejlepší, 5 nejhorší.")
 ```
-
-# Two-part workshops
 
 ```{r}
-ws2part <- data %>% filter(session=="Int") %>% select(contains("twopart")) %>% 
-  group_by(twopartWhich) %>% summarise(mean=mean(twopartHowUseful, na.rm=T), count=n())
+ggiraph(print(kurzviolinplot), tooltip_extra_css=tooltip_css,
+        hover_css = "opacity: .5;", width = .8, height_svg = 4,
+        fontname_sans = d_fonts_sans_css)
 ```
+
+# Basic stats
+
+# Feedback
+
+## What changed from last year
+
+### July
 
 ```{r, results="asis"}
-htmltools::tag("i",varArgs = list("class"="fa fa-camera-retro","Hi"))
+print_bullets(ddf$rocnikysrovnani[ddf$session=="Júl"])
+```
+
+### August
+
+```{r, results="asis"}
+print_bullets(ddf$rocnikysrovnani[ddf$session=="Aug"])
+```
+
+## Anything else?
+
+The box at the end where students could put anything else they had on their minds.
+
+### July
+
+```{r, results="asis"}
+print_bullets(ddf$coseneveslo[ddf$session=="Júl"])
+```
+
+### August
+
+```{r, results="asis"}
+print_bullets(ddf$coseneveslo[ddf$session=="Aug"])
+```
+
+### International
+
+```{r, results="asis"}
+print_bullets(ddf$coseneveslo[ddf$session=="Int"])
+```
+
+
+
+```{r Render courses, child="_render_courses.Rmd"}
 ```
 
