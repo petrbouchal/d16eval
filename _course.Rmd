@@ -9,10 +9,11 @@ params:
 ---
 
 ---
-title: '`r paste(params$kurz, params$turnus)`'
+title: '`r paste0(params$kurz," (",params$turnus,")")`'
 ---
 
 ```{r init_course, include=FALSE}
+library(knitr)
 options(max.print="75")
 opts_chunk$set(echo=FALSE,
 	             cache=FALSE,
@@ -24,10 +25,91 @@ opts_chunk$set(echo=FALSE,
 opts_knit$set(width=75)
 ```
 
+```{r}
+source("library.r")
+source("loadprocesseddata.r")
+```
 
-```{r courseid}
-print(params$kurz)
-print(params$turnus)
+```{r dataset}
+thiskurz <- kurzy %>% filter(session == as.character(params$turnus),
+                             kurz == as.character(params$kurz))
+```
+
+# Zpětná vazba na kurz
+
+## Celkové hodnocení
+
+```{r}
+hodavg <- thiskurz %>% group_by(kurzslot) %>% summarise(prumer=mean(hodnoceni))
+names(hodavg) <- c("Blok setkání","Průměrná známka")
+```
+
+Průměrná známka: `r knitr::kable(hodavg, digits=2)`
+
+(Je možné, že jsi učil/a jen v jednom slotu, ale ukazují se ti oba, nebo naopak. Je to tím,
+jak studenti zadali kurzy v dotazníku.)
+
+## Co se studentům nejvíc líbilo?
+
+```{r results="asis"}
+print_bullets(thiskurz$libilo)
+```
+
+## Co zlepšit na kurzu
+
+```{r results="asis"}
+print_bullets(thiskurz$zmenit)
+```
+
+# Zapojení
+
+## Obtížnost
+
+### Setkání kurzu
+
+### Materiály na kurz
+
+# Zpětná vazba na lektora
+
+## Hodnocení
+
+## Poznámky k lektorovi
+
+```{r results="asis"}
+print_bullets(thiskurz$lektorpoznamky)
+```
+
+# Dopad
+
+Ovlivnil kurz studenty?
+
+## Ano, nebo ne?
+
+```{r}
+ovlivneno <- thiskurz %>%
+  filter(!is.na(ovlivnil)) %>% 
+  mutate(ovlivnil = ifelse(ovlivnil %in% c("Ano","Yes"), 1, 0)) %>% 
+  summarise(ovlivnil = mean(ovlivnil, na.rm=T))
+```
+
+```{r, results="asis",strip.white=T}
+library(flexdashboard)
+gauge(round(ovlivneno[1,1]*100, 0), min = 0, max = 100, symbol = '%', gaugeSectors(
+  success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
+))
 ```
 
 
+## V čem?
+
+```{r results="asis"}
+if(length(thiskurz$ovlivnilVCem[!is.na(thiskurz$ovlivnilVCem)])>0) {
+  cat(paste("* ", thiskurz$ovlivnilVCem[!is.na(thiskurz$ovlivnilVCem)]), sep="\n\n")
+} else {cat("Nic.")}
+```
+
+## Pokud ne, proč ne?
+
+```{r results="asis"}
+print_bullets(thiskurz$ovlivnilProcNe)
+```
