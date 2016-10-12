@@ -54,7 +54,8 @@ mapviz <- ggplot() +
 ```
 
 ```{r echo=F, fig.align="left"}
-ggiraph(print(mapviz), tooltip_extra_css = tooltip_css, fontname_sans = "Gill Sans MT, Gill Sans, sans-serif", width_svg = 6, height_svg = 4, width = 1)
+ggiraph(print(mapviz), tooltip_extra_css = tooltip_css,
+        fontname_sans = d_fonts_sans_css, width_svg = 6, height_svg = 4, width = 1)
 ```
 
 # Who talked to whom
