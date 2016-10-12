@@ -1,0 +1,63 @@
+---
+title: "R Notebook"
+---
+
+```{r knitr_init, echo=FALSE, cache=FALSE, warning=F}
+library(knitr)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+```{r}
+source("library.R")
+source("loadprocesseddata.R")
+```
+
+# Team workshops
+
+```{r}
+teamws <- ddf %>% select(contains("wsTymove"), session) %>%
+  select(contains("_"), session) %>% 
+  gather(key=workshop, value=value, -session) %>% 
+  separate(workshop, into = c("variable","day")) %>% 
+  group_by(session, day, variable) %>% 
+  mutate(pocet=n()) %>% 
+  group_by(session, day, variable, value) %>% 
+  summarise(share=n()/mean(pocet)) %>%
+  ungroup() %>% 
+  mutate(value = fct_relevel(value, c(likertcz)),
+         day   = fct_relevel(day, rev(c("po","st","pa","so"))),
+         day   = fct_recode(day, c(Pondělí="po",Středa="st",Pátek="pa",Sobota="so")))
+```
+
+## How interesting, how useful?
+
+```{r}
+
+library(ggiraph)
+library(stringr)
+
+teamws2 <- teamws %>% filter(session == "Int") %>% arrange(value) %>%
+  filter(day!="Sobota") %>%
+  mutate(tooltip = paste0(value, " ", format(share*100,digits = 1), "%"),
+         tooltip = str_replace_all(tooltip,"'","&#8217")) %>% 
+  ungroup() %>% mutate(dataid = as.character(row_number()))
+
+wsintplot <- ggplot(teamws2,aes(x = day, y = share, fill = value)) +
+  geom_bar_interactive(stat = "identity", position = "stack",
+                       aes(tooltip=tooltip, data_id=dataid)) +
+  facet_wrap(~variable) + coord_flip()
+```
+
+```{r}
+ggiraph(print(wsintplot), tooltip_extra_css=tooltip_css, hover_css = "opacity: .5;")
+```
