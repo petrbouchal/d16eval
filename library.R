@@ -7,7 +7,8 @@ library(lubridate)
 library(extrafont)
 library(RColorBrewer)
 
-tooltip_css <- "font-family:\"Gill Sans MT\", \"Gill Sans\", sans-serif; background-color:black; color: white; font-size: 8pt; padding:5px;border-radius:5px 5px 5px 5px;"
+tooltip_css <- "font-family:\"Gill Sans MT\", \"Gill Sans\", sans-serif; background-color:black; color: white; font-size: 11pt; padding:5px;border-radius:5px 5px 5px 5px;"
+d_fonts_sans_css <- "\"Gill Sans MT\", \"Gill Sans\", \"sans-serif\""
 
 # loadcustomthemes(fontfamily = "Gill Sans MT")
 theme_discover <- theme(
@@ -66,4 +67,3 @@ print_bullets <- function(data, language) {
   } else {cat(ifelse(language=="cz","[Nic]","[Nothing]"))}
 }
 
-d_fonts_sans_css <- "\"Gill Sans MT, \"Gill Sans\", \"sans-serif\""
