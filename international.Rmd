@@ -1,0 +1,64 @@
+---
+title: "The international side of Discover"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The geography of Discover
+
+```{r include=F}
+library(ggplot2)
+library(dplyr)
+library(ggiraph)
+library(maptools)
+
+source("loadprocesseddata.r")
+source("library.R")
+
+maplines <- map_data('world')
+maplines %>% filter(region != "Antarctica") -> maplines
+maplines <- fortify(maplines)
+
+mapdata <- ddf %>% filter(session=="Int") %>%
+  group_by(region=CRorSK) %>% 
+  summarise(value=n()) %>% 
+  mutate(region = recode(region,
+                         "United States of America" = "USA",
+                         "United Kingdom" = "UK",
+                         "Russian Federation" = "Russia"),
+         region2 = region)
+
+mapviz <- ggplot() +
+  geom_map(data = maplines, map = maplines,
+                       aes(x = long, y = lat, group = region, map_id = region,
+                           data_id = region), fill = "lightgrey") +
+  geom_map_interactive(data = mapdata, map = maplines,
+                       aes(fill = value, map_id = region, data_id = region, group = region,
+                           tooltip = paste0(region, ": ", value)),
+                       colour="white", size=0.2) +
+  coord_map("gall", lat0=0, xlim = c(-180,180), ylim=c(-60, 90)) +
+  scale_fill_continuous(low="gold", high="darkgoldenrod",
+                        guide=guide_colourbar(ticks=F, barwidth=unit(4, "cm"),
+                                              barheight = unit(12, "pt")),
+                        name = "Number of students") +
+  scale_y_continuous(breaks=c()) +
+  scale_x_continuous(breaks=c()) +
+  labs(title="Where students come from",
+       subtitle = "International Discover only") +
+  theme(panel.border = element_blank(), legend.position = "bottom",
+        axis.title = element_blank()) +
+  theme_discover
+```
+
+```{r echo=F, fig.align="left"}
+ggiraph(print(mapviz), tooltip_extra_css = tooltip_css, fontname_sans = "Gill Sans MT, Gill Sans, sans-serif", width_svg = 6, height_svg = 4, width = 1)
+```
+
+# Who talked to whom
+
+# Did people feel included?
+
+# Was English a problem?
